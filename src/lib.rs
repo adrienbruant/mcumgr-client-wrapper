@@ -1,8 +1,7 @@
 use mcumgr_client;
 use mcumgr_client::SerialSpecs;
 use pyo3::prelude::*;
-use pyo3::types::{PyBytes, PyDict, PyList};
-use serde_cbor::Value;
+use pyo3::types::{PyDict, PyList};
 use std::path::PathBuf;
 
 /// A session allows sending MCUmgr commands to a device over a serial port.
@@ -70,14 +69,14 @@ impl SerialSession {
     /// Returns:
     ///     list: A list of dicts containing the properties of the images
     ///
-    fn list(&self, py: Python) -> PyResult<PyObject> {
+    fn list(&self, py: Python) -> PyResult<Py<PyAny>> {
         let result = mcumgr_client::list(&self.specs)
             .map_err(|e| PyErr::new::<pyo3::exceptions::PyRuntimeError, _>(format!("{:?}", e)))?;
 
-        let py_list = PyList::empty_bound(py);
+        let py_list = PyList::empty(py);
 
         for entry in &result.images {
-            let py_dict = PyDict::new_bound(py);
+            let py_dict = PyDict::new(py);
             py_dict.set_item("image", entry.image.clone())?;
             py_dict.set_item("slot", entry.slot.clone())?;
             py_dict.set_item("version", entry.version.clone())?;
@@ -113,7 +112,7 @@ impl SerialSession {
         py: Python,
         filename: &str,
         slot: u8,
-        progress: Option<PyObject>,
+        progress: Option<Py<PyAny>>,
     ) -> PyResult<()> {
         let path = PathBuf::from(filename);
         let callback = match progress {
@@ -122,7 +121,7 @@ impl SerialSession {
                 let pyfun = pyfun.clone_ref(py);
 
                 Some(move |pos, total| {
-                    Python::with_gil(|py| {
+                    Python::attach(|py| {
                         if let Err(e) = pyfun.call1(py, (pos, total)) {
                             e.print(py);
                         }

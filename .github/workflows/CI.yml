@@ -27,7 +27,7 @@ jobs:
       - name: Set version from tag in pyproject.toml
         run: |
           version=${{github.ref_name}}
-          sed -i.bak -E "s/# version\s*=\s*\".*\"/version = \"${version:1}\"/" pyproject.toml
+          sed -i.bak -E "s/version\s*=\s*\"0\.0\.0\"/version = \"${version:1}\"/" Cargo.toml
       - name: Upload pyproject.toml
         uses: actions/upload-artifact@v4
         with:
@@ -57,8 +57,7 @@ jobs:
           name: pyproject
       - uses: actions/setup-python@v6
         with:
-          # 3.13 is the latest python version supporting maturin
-          python-version: 3.13
+          python-version: 3.x
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
@@ -95,7 +94,7 @@ jobs:
           name: pyproject
       - uses: actions/setup-python@v6
         with:
-          python-version: 3.13
+          python-version: 3.x
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
@@ -132,7 +131,7 @@ jobs:
           name: pyproject
       - uses: actions/setup-python@v6
         with:
-          python-version: 3.13
+          python-version: 3.x
           architecture: ${{ matrix.platform.python_arch }}
       - name: Build wheels
         uses: PyO3/maturin-action@v1
@@ -167,7 +166,7 @@ jobs:
           name: pyproject
       - uses: actions/setup-python@v6
         with:
-          python-version: 3.13
+          python-version: 3.x
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
