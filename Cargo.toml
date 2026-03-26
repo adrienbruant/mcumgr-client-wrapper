@@ -12,5 +12,5 @@ crate-type = ["cdylib"]
 mcumgr-client = { path = "mcumgr-client" }
 
 [dependencies.pyo3]
-version = "0.27.2"
+version = "0.28.2"
 features = ["abi3-py310"]

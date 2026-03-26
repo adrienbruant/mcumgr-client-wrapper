@@ -20,4 +20,4 @@ authors = [
 dynamic = ["version"]
 
 [project.urls]
-Repository = "https://github.com/comap-smart-home/mcumgr-client-wrapper"
+Repository = "https://github.com/adrienbruant/mcumgr-client-wrapper"
